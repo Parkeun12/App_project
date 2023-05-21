@@ -45,4 +45,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - asset/
+    - lib/asset/logo2.png
