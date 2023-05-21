@@ -13,11 +13,31 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
+  #달력 yaml 추가
+  table_calendar: 3.0.7
+  intl: 0.17.0
+  drift: 2.1.0
+  sqlite3_flutter_libs: 0.5.10
+  path_provider: 2.0.11
+  path: 1.8.3
+  get_it: 7.2.0
+  dio: 4.0.6
+  provider: 6.0.3
+  uuid: 3.0.6
+  #ㅡㅡ
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  #달력 yaml 추가2
+  drift_dev: 2.1.0
+  build_runner: 2.2.0
+  #ㅡㅡ
+
+  #웹뷰
+  webview_flutter: 3.0.4
+  #ㅡㅡ
   flutter_lints: ^2.0.0
 
 flutter:
