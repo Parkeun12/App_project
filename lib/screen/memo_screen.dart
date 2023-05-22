@@ -31,14 +31,6 @@ class _MemoScreenState extends State<MemoScreen> {
           height: 100,
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              // Delete memo functionality
-            },
-          ),
-        ],
       ),
       body: Stack(
         children: [

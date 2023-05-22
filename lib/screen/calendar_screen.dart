@@ -7,9 +7,7 @@ import 'package:app_project/const/colors.dart';
 
 class CalendarScreen extends StatefulWidget {
   final int number;
-  const CalendarScreen({
-    required this.number,
-    Key? key}) : super(key: key);
+  const CalendarScreen({required this.number, Key? key}) : super(key: key);
 
   @override
   State<CalendarScreen> createState() => _HomeScreenState();
@@ -23,17 +21,26 @@ class _HomeScreenState extends State<CalendarScreen> {
   );
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0, // Set elevation to 0 to remove the shadow
+        title: Image.asset(
+          'lib/asset/logo2.png',
+          width: 100,
+          height: 100,
+        ),
+        centerTitle: true,
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: MAIN_COLOR,
-
-        onPressed: (){
+        onPressed: () {
           showModalBottomSheet(
             context: context,
             isDismissible: true,
             builder: (_) => ScheduleButtonSheet(),
-
             isScrollControlled: true,
           );
         },
@@ -46,7 +53,6 @@ class _HomeScreenState extends State<CalendarScreen> {
           children: [
             MainCalendar(
               selectedDate: selectedDate,
-
               onDaySelected: onDaySelected,
             ),
             SizedBox(height: 8.0),
@@ -59,15 +65,14 @@ class _HomeScreenState extends State<CalendarScreen> {
               startTime: 12,
               endTime: 14,
               content: '일정 내용',
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  void onDaySelected(DateTime selectedDate, DateTime focusedDate){
-
+  void onDaySelected(DateTime selectedDate, DateTime focusedDate) {
     setState(() {
       this.selectedDate = selectedDate;
     });
