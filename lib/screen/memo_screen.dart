@@ -69,6 +69,7 @@ class _MemoScreenState extends State<MemoScreen> {
             bottom: 16.0,
             right: 16.0,
             child: FloatingActionButton(
+              backgroundColor: MAIN_COLOR,
               onPressed: () {
                 _showAddNoteDialog();
               },
