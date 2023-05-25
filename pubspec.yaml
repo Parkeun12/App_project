@@ -46,3 +46,4 @@ flutter:
 
   assets:
     - lib/asset/logo2.png
+    - lib/asset/logo.png
