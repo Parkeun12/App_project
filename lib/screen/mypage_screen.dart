@@ -22,6 +22,54 @@ class MypageScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
+      body: Column(
+        children: [
+          SizedBox(height: 30),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+              ),
+              CircleAvatar(
+                radius: 70,
+                backgroundColor: LIGHT_GREY_COLOR,
+              ),
+            ],
+          ),
+          SizedBox(height: 50),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Text(
+                  '내 정보',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Icon(Icons.arrow_forward),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Container(
+            width: double.infinity,
+            height: 1,
+            color: DARK_GREY_COLOR,
+          ),
+          // Add additional content below if needed
+        ],
+      ),
     );
   }
 }
