@@ -9,6 +9,8 @@ import 'package:app_project/firebase_options.dart';
 import 'package:app_project/model/model_auth.dart';
 import 'package:app_project/model/model_login.dart';
 
+import 'model/model_page_provider.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -17,9 +19,15 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => FirebaseAuthProvider()),
+        ChangeNotifierProvider(
+            create: (_) => PageProvider(),
+        ),
+
         ChangeNotifierProvider<FirebaseAuthProvider>(
           create: (_) => FirebaseAuthProvider(),
         ),
+
         ChangeNotifierProvider<LoginModel>(
           create: (_) => LoginModel(),
         ),
