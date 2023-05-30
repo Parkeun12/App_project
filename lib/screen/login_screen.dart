@@ -139,6 +139,9 @@ class LoginForm extends StatelessWidget {
                 width: double.infinity,
                 height: 40,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: MAIN_COLOR,
+                  ),
                   onPressed: _login,
                   child: Text(
                     '로그인',

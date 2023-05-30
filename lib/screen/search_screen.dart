@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:app_project/model/model_page_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class SearchScreen extends StatelessWidget {
@@ -25,25 +26,28 @@ class SearchScreen extends StatelessWidget {
         } else {
           return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 1 / 1.5,
+                crossAxisCount: 3,
+                childAspectRatio: 1 / 1.1,
               ),
               itemCount: pageProvider.pages.length,
               itemBuilder: (context, index) {
                 return GridTile(
                     child: InkWell(
-                      onTap: () { },
+                      onTap: () {},
                       child: Container(
                         padding: EdgeInsets.all(10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Image.network(
+                                pageProvider.pages[index].imageUrl,
+                                width: 100,
+                                height: 100,
+                            ),
                             Text(
                               pageProvider.pages[index].title,
-                              style: TextStyle(fontSize: 20),
+                              style: TextStyle(fontSize: 15),
                             ),
-                            Text(pageProvider.pages[index].price.toString() + '원',
-                              style: TextStyle(fontSize: 16, color: Colors.red),)
                           ],
                         ),
                       ),

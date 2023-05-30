@@ -27,6 +27,7 @@ dependencies:
   firebase_core: ^2.13.0
   cloud_firestore_platform_interface: ^5.14.1
   cloud_firestore: ^4.7.1
+  url_launcher: ^6.1.11
   #ㅡㅡ
 
 dev_dependencies:
