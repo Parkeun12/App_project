@@ -17,9 +17,10 @@ class PageProvider with ChangeNotifier {
     Query<Map<String, dynamic>> itemsQuery = pagesReference;
 
     if (query != null && query.isNotEmpty) {
-      itemsQuery = itemsQuery.where('title', isGreaterThanOrEqualTo: query)
-          .where('title', isLessThanOrEqualTo: query + '\uf8ff')
-          .where('hashtags', arrayContains: query);
+      itemsQuery = itemsQuery
+          .where('hashtags', arrayContains: query)
+          .orderBy('title')
+          .startAt([query]).endAt([query + '\uf8ff']);
     }
 
     final results = await itemsQuery.get();
@@ -36,7 +37,6 @@ class PageProvider with ChangeNotifier {
 
     notifyListeners();
   }
-
 
   Future<void> search(String query) async {
     fetchItems(query: query);

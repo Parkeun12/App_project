@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_project/model/model_page_provider.dart';
 import 'package:app_project/model/model_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Add this line
 import 'package:url_launcher/url_launcher.dart';
-
 
 class SearchScreen extends StatefulWidget {
   final int number;
@@ -87,10 +85,9 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-
   void performSearch() {
     final pageProvider = Provider.of<PageProvider>(context, listen: false);
-    final searchQuery = searchController.text;
+    final searchQuery = searchController.text.trim();
 
     pageProvider.search(searchQuery);
   }
@@ -184,9 +181,6 @@ class _SearchScreenState extends State<SearchScreen> {
       },
     );
   }
-
-
-
 
   void _launchURL(String url) async {
     if (await canLaunch(url)) {
