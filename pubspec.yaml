@@ -47,6 +47,7 @@ dev_dependencies:
   firebase_core: ^2.13.0
   firebase_auth: ^4.6.1
   shared_preferences: ^2.0.0
+
 flutter:
 
   uses-material-design: true

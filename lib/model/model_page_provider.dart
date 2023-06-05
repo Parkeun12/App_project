@@ -3,20 +3,42 @@ import 'package:flutter/material.dart';
 import 'model_page.dart';
 
 class PageProvider with ChangeNotifier {
-  late CollectionReference pagesReference;
+  late CollectionReference<Map<String, dynamic>> pagesReference;
   List<PageModel> pages = [];
+  List<PageModel> searchItem = [];
 
   PageProvider({reference}) {
     pagesReference =
         reference ?? FirebaseFirestore.instance.collection('Pages');
+    fetchItems();
   }
 
-  Future<void> fetchItems() async {
-    pages = await pagesReference.get().then((QuerySnapshot results) {
-      return results.docs.map((DocumentSnapshot document) {
-        return PageModel.fromSnapshot(document);
-      }).toList();
-    });
+  Future<void> fetchItems({String? query}) async {
+    Query<Map<String, dynamic>> itemsQuery = pagesReference;
+
+    if (query != null && query.isNotEmpty) {
+      itemsQuery = itemsQuery.where('title', isGreaterThanOrEqualTo: query)
+          .where('title', isLessThanOrEqualTo: query + '\uf8ff')
+          .where('hashtags', arrayContains: query);
+    }
+
+    final results = await itemsQuery.get();
+
+    List<PageModel> pages = results.docs.map((document) {
+      return PageModel.fromSnapshot(document);
+    }).toList();
+
+    if (query != null && query.isNotEmpty) {
+      searchItem = pages;
+    } else {
+      this.pages = pages;
+    }
+
     notifyListeners();
+  }
+
+
+  Future<void> search(String query) async {
+    fetchItems(query: query);
   }
 }

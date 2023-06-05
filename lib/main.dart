@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:app_project/firebase_options.dart';
 import 'package:app_project/model/model_auth.dart';
 import 'package:app_project/model/model_login.dart';
+import 'package:app_project/model/model_query.dart';
+import 'package:app_project/screen/search_screen.dart';
 
 import 'model/model_page_provider.dart';
 
@@ -16,36 +18,39 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initializeDateFormatting();
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => FirebaseAuthProvider()),
-        ChangeNotifierProvider(
-            create: (_) => PageProvider(),
-        ),
-
-        ChangeNotifierProvider<FirebaseAuthProvider>(
-          create: (_) => FirebaseAuthProvider(),
-        ),
-
-        ChangeNotifierProvider<LoginModel>(
-          create: (_) => LoginModel(),
-        ),
-      ],
-      child: MyApp(),
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/loading',
-      routes: {
-        '/': (context) => RootScreen(),
-        '/loading': (context) => LoadingScreen(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<QueryProvider>(
+          create: (_) => QueryProvider(),
+        ),
+        ChangeNotifierProvider<FirebaseAuthProvider>(
+          create: (_) => FirebaseAuthProvider(),
+        ),
+        ChangeNotifierProvider<LoginModel>(
+          create: (_) => LoginModel(),
+        ),
+        ChangeNotifierProvider<PageProvider>(
+          create: (_) => PageProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'App Project',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        initialRoute: '/loading',
+        routes: {
+          '/': (context) => RootScreen(),
+          '/search': (context) => SearchScreen(number: 1),
+          '/loading': (context) => LoadingScreen(),
+        },
+      ),
     );
   }
 }

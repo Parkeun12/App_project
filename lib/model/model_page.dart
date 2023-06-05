@@ -6,7 +6,6 @@ class PageModel {
   late String imageUrl;
   late String website;
 
-
   PageModel({
     required this.id,
     required this.title,
@@ -14,12 +13,12 @@ class PageModel {
     required this.website,
   });
 
-  PageModel.fromSnapshot(DocumentSnapshot snapshot){
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+  PageModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    Map<String, dynamic>? data = snapshot.data();
     id = snapshot.id;
-
-    title = data['title'];
-    imageUrl = data['imageUrl'];
-    website = data['website'];
+    title = data?['title'] ?? '';
+    imageUrl = data?['imageUrl'] ?? '';
+    website = data?['website'] ?? '';
   }
+
 }

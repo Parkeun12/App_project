@@ -8,9 +8,9 @@
     </queries>
 
     <application
-        android:label="app_project"
+        android:label="My Goods"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/last_logo">
         <activity
             android:name=".MainActivity"
             android:exported="true"
