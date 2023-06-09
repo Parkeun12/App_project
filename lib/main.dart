@@ -10,6 +10,8 @@ import 'package:app_project/model/model_auth.dart';
 import 'package:app_project/model/model_login.dart';
 import 'package:app_project/model/model_query.dart';
 import 'package:app_project/screen/search_screen.dart';
+import 'package:app_project/database/drift_database.dart';
+import 'package:get_it/get_it.dart';
 
 import 'model/model_page_provider.dart';
 
@@ -17,6 +19,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initializeDateFormatting();
+
+  final database = LocalDatabase();
+
+  GetIt.I.registerSingleton<LocalDatabase>(database);
 
   runApp(MyApp());
 }

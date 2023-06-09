@@ -36,7 +36,9 @@ dev_dependencies:
 
   #달력 yaml 추가2
   drift_dev: 2.1.0
-  build_runner: 2.2.0
+  build_runner: ^2.4.5
+  json_annotation: 4.7.0
+  json_serializable: 6.5.4
   #ㅡㅡ
 
   #웹뷰

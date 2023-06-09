@@ -1,9 +1,11 @@
+import 'package:app_project/database/drift_database.dart';
 import 'package:flutter/material.dart';
 import 'package:app_project/component/main_calendar.dart';
 import 'package:app_project/component/schedule_card.dart';
 import 'package:app_project/component/today.dart';
 import 'package:app_project/component/schedule_button.dart';
 import 'package:app_project/const/colors.dart';
+import 'package:get_it/get_it.dart';
 
 class CalendarScreen extends StatefulWidget {
   final int number;
@@ -40,7 +42,9 @@ class _HomeScreenState extends State<CalendarScreen> {
           showModalBottomSheet(
             context: context,
             isDismissible: true,
-            builder: (_) => ScheduleButtonSheet(),
+            builder: (_) => ScheduleButtonSheet(
+              selectedDate: selectedDate,
+            ),
             isScrollControlled: true,
           );
         },
@@ -61,10 +65,39 @@ class _HomeScreenState extends State<CalendarScreen> {
               count: 0,
             ),
             SizedBox(height: 8.0),
-            ScheduleCard(
-              startTime: 12,
-              endTime: 14,
-              content: '일정 내용',
+            Expanded(
+              child: StreamBuilder<List<Schedule>>(
+                stream: GetIt.I<LocalDatabase>().watchSchedules(selectedDate),
+                builder: (context, snapshot){
+                  if(!snapshot.hasData){
+                    return Container();
+                  }
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index){
+                      final schedule = snapshot.data![index];
+                      return Dismissible(
+                        key: ObjectKey(schedule.id),
+                      direction: DismissDirection.startToEnd,
+                      onDismissed: (DismissDirection direction){
+                          GetIt.I<LocalDatabase>()
+                              .removeSchedule(schedule.id);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0, left: 8.0,
+                        right: 8.0),
+
+                        child: ScheduleCard(
+                          startTime: schedule.startTime,
+                          endTime: schedule.endTime,
+                          content: schedule.content,
+                        ),
+                      ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),
