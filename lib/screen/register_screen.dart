@@ -32,20 +32,48 @@ class _RegisterScreenState extends State<RegisterScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('Passwords do not match.'),
+            title: Text('오류'),
+            content: Text('비밀번호가 일치하지 않습니다.'),
             actions: [
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                style: ElevatedButton.styleFrom(
+                  primary: MAIN_COLOR, // Change the button color to red
+                ),
+                child: Text('확인'),
               ),
             ],
           );
         },
       );
     } else {
+      // Password length is less than 6 characters
+      if (password.length < 6) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('오류'),
+              content: Text('비밀번호는 6자 이상이어야 합니다.'),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: MAIN_COLOR, // Change the button color to red
+                  ),
+                  child: Text('확인'),
+                ),
+              ],
+            );
+          },
+        );
+        return; // Return from the function to prevent further execution
+      }
+
       // Perform registration logic here
       // ...
 
@@ -54,7 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((userCredential) {
         // Registration successful
-        print('Registration successful');
+        print('회원가입이 완료되었습니다.');
 
         // Navigate to the login screen
         Navigator.pushReplacement(
@@ -63,21 +91,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
       }).catchError((error) {
         // Registration failed
-        print('Registration failed: $error');
+        print('회원가입에 실패하였습니다: $error');
+
+        String errorMessage = '';
+
+        if (error.code == 'invalid-email') {
+          errorMessage = '이메일 형식이 올바르지 않습니다.';
+        } else {
+          errorMessage = '회원가입에 실패하였습니다: $error';
+        }
 
         // Handle registration error
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Error'),
-              content: Text('Registration failed: $error'),
+              title: Text('오류'),
+              content: Text(errorMessage),
               actions: [
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK'),
+                  style: ElevatedButton.styleFrom(
+                    primary: MAIN_COLOR, // Change the button color to red
+                  ),
+                  child: Text('확인'),
                 ),
               ],
             );
@@ -91,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Membership Registration'),
+        title: Text('회원가입'),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -106,7 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Text('회원가입', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               ),
               SizedBox(height: 10),
-              _buildTextField(_emailController, 'Email'),
+              _buildTextField(_emailController, '이메일'),
               SizedBox(height: 10),
               _buildTextField(_passwordController, '비밀번호', obscureText: true),
               SizedBox(height: 10),

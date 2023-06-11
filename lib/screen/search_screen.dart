@@ -18,69 +18,106 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController searchController = TextEditingController();
+  bool isSearchPerformed = false;
+  late final FocusNode searchFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    searchFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    searchFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final pageProvider = Provider.of<PageProvider>(context);
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
-        child: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          title: Image.asset(
-            'lib/asset/logo2.png',
-            width: 100,
-            height: 100,
-          ),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              // Handle back button press
-              Navigator.pop(context);
-            },
+    return WillPopScope(
+      onWillPop: () async {
+        if (isSearchPerformed) {
+          // Clear the search results and return to the initial search screen
+          pageProvider.clearSearch();
+          setState(() {
+            isSearchPerformed = false;
+          });
+          return false; // prevent the default back navigation
+        }
+        return true; // allow the default back navigation
+      },
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            title: Image.asset(
+              'lib/asset/logo2.png',
+              width: 100,
+              height: 100,
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                if (isSearchPerformed) {
+                  // Clear the search results and return to the initial search screen
+                  pageProvider.clearSearch();
+                  setState(() {
+                    isSearchPerformed = false;
+                  });
+                } else {
+                  // Handle back button press
+                  Navigator.pop(context);
+                }
+              },
+            ),
           ),
         ),
-      ),
-      body: Column(
-        children: [
-          Container(
-            height: 40,
-            margin: EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: TextField(
-                controller: searchController,
-                style: TextStyle(color: Colors.black),
-                onSubmitted: (_) {
-                  // Perform the search
-                  performSearch();
-                },
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  hintStyle: TextStyle(color: Colors.grey),
-                  suffixIcon: IconButton(
-                    color: Colors.black,
-                    onPressed: () {
-                      // Perform the search
-                      performSearch();
-                    },
-                    icon: Icon(Icons.search),
+        body: Column(
+          children: [
+            Container(
+              height: 40,
+              margin: EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: TextField(
+                  controller: searchController,
+                  focusNode: searchFocusNode,
+                  style: TextStyle(color: Colors.black),
+                  onSubmitted: (_) {
+                    // Perform the search
+                    performSearch();
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    suffixIcon: IconButton(
+                      color: Colors.black,
+                      onPressed: () {
+                        // Perform the search
+                        performSearch();
+                      },
+                      icon: Icon(Icons.search),
+                    ),
+                    border: InputBorder.none,
                   ),
-                  border: InputBorder.none,
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: buildSearchResults(),
-          ),
-        ],
+            Expanded(
+              child: buildSearchResults(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -90,6 +127,10 @@ class _SearchScreenState extends State<SearchScreen> {
     final searchQuery = searchController.text.trim();
 
     pageProvider.search(searchQuery);
+    setState(() {
+      isSearchPerformed = true;
+    });
+    searchFocusNode.unfocus(); // unfocus the search field after performing the search
   }
 
   Widget buildSearchResults() {
@@ -188,11 +229,5 @@ class _SearchScreenState extends State<SearchScreen> {
     } else {
       throw 'Could not launch $url';
     }
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
   }
 }

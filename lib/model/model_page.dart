@@ -20,5 +20,4 @@ class PageModel {
     imageUrl = data?['imageUrl'] ?? '';
     website = data?['website'] ?? '';
   }
-
 }

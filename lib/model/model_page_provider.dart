@@ -17,22 +17,40 @@ class PageProvider with ChangeNotifier {
     Query<Map<String, dynamic>> itemsQuery = pagesReference;
 
     if (query != null && query.isNotEmpty) {
-      itemsQuery = itemsQuery
-          .where('hashtags', arrayContains: query)
-          .orderBy('title')
-          .startAt([query]).endAt([query + '\uf8ff']);
-    }
+      final String lowercaseQuery = query.toLowerCase();
 
-    final results = await itemsQuery.get();
+      // Search by hashtags
+      final QuerySnapshot<Map<String, dynamic>> hashtagsQuerySnapshot =
+      await itemsQuery.where('hashtags', arrayContains: lowercaseQuery).get();
 
-    List<PageModel> pages = results.docs.map((document) {
-      return PageModel.fromSnapshot(document);
-    }).toList();
+      // Search by title
+      final QuerySnapshot<Map<String, dynamic>> titleQuerySnapshot =
+      await itemsQuery.where('title', isEqualTo: lowercaseQuery).get();
 
-    if (query != null && query.isNotEmpty) {
+      final List<PageModel> pages = [];
+
+      // Add search results from hashtags query
+      for (final DocumentSnapshot<Map<String, dynamic>> document in hashtagsQuerySnapshot.docs) {
+        pages.add(PageModel.fromSnapshot(document));
+      }
+
+      // Add search results from title query
+      for (final DocumentSnapshot<Map<String, dynamic>> document in titleQuerySnapshot.docs) {
+        final PageModel page = PageModel.fromSnapshot(document);
+
+        // Check if the page is already added from hashtags query to avoid duplicates
+        if (!pages.contains(page)) {
+          pages.add(page);
+        }
+      }
+
       searchItem = pages;
     } else {
-      this.pages = pages;
+      final QuerySnapshot<Map<String, dynamic>> results = await itemsQuery.orderBy('title').get();
+
+      pages = results.docs.map((document) {
+        return PageModel.fromSnapshot(document);
+      }).toList();
     }
 
     notifyListeners();
@@ -40,5 +58,10 @@ class PageProvider with ChangeNotifier {
 
   Future<void> search(String query) async {
     fetchItems(query: query);
+  }
+
+  void clearSearch() {
+    searchItem.clear();
+    notifyListeners();
   }
 }
